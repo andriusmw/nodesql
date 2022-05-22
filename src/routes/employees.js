@@ -3,6 +3,8 @@ const router = express.Router();
 
 const mysqlConnection = require("../database");
 
+/************************ BÚSQUEDA DE TODO AL CARGAR ************* */
+
 router.get("/", (req, res) => {
   mysqlConnection.query("SELECT * FROM employees", (err, rows, fields) => {
     //Lista todo lo que hay en la tabla employess, al llamar a esa ruta.
@@ -14,6 +16,7 @@ router.get("/", (req, res) => {
   });
 });
 
+/*********************** BUSQUEDA POR ID ******************* */
 router.get("/:id", (req, res) => {
   const { id } = req.params;
   console.log(id);
@@ -29,4 +32,5 @@ router.get("/:id", (req, res) => {
     }
   );
 });
+
 module.exports = router;
