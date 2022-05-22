@@ -1,4 +1,5 @@
 const express = require("express");
+const req = require("express/lib/request");
 const router = express.Router();
 
 const mysqlConnection = require("../database");
@@ -25,12 +26,33 @@ router.get("/:id", (req, res) => {
     [id],
     (err, rows, fields) => {
       if (!err) {
-        res.json(rows);
+        res.json(rows[0]);
       } else {
         console.log(err);
       }
     }
   );
+});
+
+/************* AÑADIR USUARIOS ********** */
+
+router.post("/", (rew, res) => {
+  const { id, name, salary } = req.body;
+  //obtener id, nombre y salario del objeto que manda el cliente
+  const query = `
+        SET @id = ?;
+        SET @name = ?;
+        SET @salary = ?;
+        CALL employeeAddOrEdit(@id,@name,@salary);
+        `;
+  //pasa parámetros a la base de datos
+  mysqlConnection.query(query, [id, name, salary], (err, rows, fields) => {
+    if (!err) {
+      res.json({ Status: "Emplead@ guardado" });
+    } else {
+      console.log(err);
+    }
+  });
 });
 
 module.exports = router;
